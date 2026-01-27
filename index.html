@@ -3,34 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forensic Coin Scanner V10.0</title>
+    <title>Coin Scanner V10.3 - Summary Table</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Kanit', sans-serif; background-color: #05070a; color: #e6edf3; }
         .mono { font-family: 'JetBrains+Mono', monospace; }
-        .glass { background: rgba(13, 17, 23, 0.9); backdrop-filter: blur(12px); border: 1px solid #30363d; }
+        .glass { background: rgba(13, 17, 23, 0.95); backdrop-filter: blur(15px); border: 1px solid #30363d; }
         .scan-line {
             height: 2px;
-            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+            background: linear-gradient(90deg, transparent, #3b82f6, #60a5fa, transparent);
             position: absolute;
             width: 100%;
-            animation: scan-move 2s linear infinite;
+            animation: scan-move 1.5s linear infinite;
         }
         @keyframes scan-move {
             0% { top: 0%; opacity: 0; }
             50% { opacity: 1; }
             100% { top: 100%; opacity: 0; }
         }
-        .item-row:hover { background: rgba(59, 130, 246, 0.1); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-8">
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-6xl mx-auto">
         <header class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
             <div>
-                <h1 class="text-4xl font-black text-white italic tracking-tighter">COIN <span class="text-blue-500">MAPPER V10</span></h1>
-                <p class="text-[10px] mono text-slate-500 uppercase tracking-[0.3em]">Individual Spatial Verification System</p>
+                <h1 class="text-4xl font-black text-white italic tracking-tighter uppercase">Forensic <span class="text-blue-500 text-glow">V10.3</span></h1>
+                <p class="text-[10px] mono text-slate-500 uppercase tracking-[0.3em]">Statistical Analysis & Individual Mapping</p>
             </div>
             <div class="flex gap-2 w-full md:w-auto">
                 <button onclick="document.getElementById('cameraInput').click()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white px-6 py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95">
@@ -47,51 +48,87 @@
 
         <div class="grid lg:grid-cols-12 gap-6">
             <!-- Viewport -->
-            <div class="lg:col-span-7 space-y-4">
-                <div id="dropZone" class="relative glass rounded-[2rem] overflow-hidden aspect-square border-2 border-slate-800 flex items-center justify-center">
-                    <img id="previewImg" class="hidden w-full h-full object-contain" alt="Coins">
+            <div class="lg:col-span-6 space-y-4">
+                <div id="dropZone" class="relative glass rounded-[2.5rem] overflow-hidden aspect-square border-2 border-slate-800 flex items-center justify-center shadow-2xl">
+                    <img id="previewImg" class="hidden w-full h-full object-contain p-2" alt="Coins">
                     <div id="placeholder" class="text-center p-8">
-                        <p class="text-slate-500 text-sm font-bold uppercase tracking-widest">กรุณาถ่ายภาพหรือเลือกรูปเหรียญ</p>
+                        <p class="text-slate-500 text-sm font-bold uppercase tracking-widest italic">Ready for Forensic Analysis</p>
                     </div>
-                    <div id="loader" class="hidden absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-20 backdrop-blur-sm">
+                    <div id="loader" class="hidden absolute inset-0 bg-black/90 flex flex-col items-center justify-center z-20 backdrop-blur-md">
                         <div class="scan-line"></div>
-                        <p class="text-blue-400 font-black mono text-[10px] animate-pulse tracking-[0.4em]">MAPPING SPATIAL COORDINATES...</p>
+                        <p class="text-blue-400 font-black mono text-[11px] animate-pulse tracking-[0.5em] mb-2 uppercase text-center">Neural Scanning...</p>
+                        <p id="loadingMsg" class="text-[9px] text-slate-500 italic text-center uppercase tracking-widest">Processing Image Data</p>
                     </div>
-                </div>
-                <div id="summaryCard" class="hidden glass p-6 rounded-3xl border-l-4 border-blue-500">
-                    <p id="summaryTxt" class="text-sm italic text-slate-300"></p>
                 </div>
             </div>
 
-            <!-- Dashboard -->
-            <div id="dashboard" class="lg:col-span-5 space-y-4 hidden">
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="glass p-5 rounded-3xl">
-                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-1">ยอดรวมเงิน</p>
-                        <p id="totalValue" class="text-3xl font-black text-white italic">0.00</p>
+            <!-- Stats & Tables -->
+            <div id="dashboard" class="lg:col-span-6 space-y-4 hidden">
+                <!-- Summary Totals -->
+                <div class="grid grid-cols-2 gap-3 text-center">
+                    <div class="glass p-6 rounded-[2rem] bg-gradient-to-br from-blue-600/10 to-transparent border-blue-500/20">
+                        <p class="text-[9px] text-blue-400 font-black uppercase tracking-widest mb-1">ยอดเงินสุทธิ</p>
+                        <p id="totalValue" class="text-4xl font-black text-white italic tracking-tighter">0.00</p>
                     </div>
-                    <div class="glass p-5 rounded-3xl border border-blue-500/30">
-                        <p class="text-[9px] text-blue-400 font-black uppercase tracking-widest mb-1">จำนวนเหรียญ</p>
-                        <p id="totalCount" class="text-3xl font-black text-white italic">0</p>
+                    <div class="glass p-6 rounded-[2rem]">
+                        <p class="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-1">จำนวนเหรียญรวม</p>
+                        <p id="totalCount" class="text-4xl font-black text-white italic tracking-tighter">0</p>
                     </div>
                 </div>
 
-                <div class="glass rounded-3xl overflow-hidden">
-                    <div class="px-5 py-3 bg-white/5 border-b border-white/5">
-                        <p class="text-[10px] font-black uppercase text-slate-400 tracking-widest italic">Verified Item List</p>
+                <!-- NEW: Summary Table by Denomination -->
+                <div class="glass rounded-[2rem] overflow-hidden border-emerald-500/20">
+                    <div class="px-6 py-4 bg-emerald-500/5 border-b border-white/5 flex justify-between items-center">
+                        <p class="text-[10px] font-black uppercase text-emerald-500 tracking-[0.2em] italic">สรุปตามประเภทเหรียญ</p>
+                        <span class="text-[9px] font-mono text-slate-500">AGGREGATED DATA</span>
                     </div>
-                    <div id="itemList" class="max-h-[400px] overflow-y-auto divide-y divide-white/5 custom-scrollbar">
-                        <!-- Items will be injected here -->
+                    <table class="w-full text-left">
+                        <thead class="bg-white/5 text-[9px] font-black uppercase text-slate-400 tracking-widest">
+                            <tr>
+                                <th class="px-6 py-3">ประเภท</th>
+                                <th class="px-6 py-3 text-center">จำนวน</th>
+                                <th class="px-6 py-3 text-right">รวมเป็นเงิน</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statRows" class="text-sm divide-y divide-white/5">
+                            <!-- Injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Individual Item Log -->
+                <div class="glass rounded-[2rem] overflow-hidden">
+                    <div class="px-6 py-4 bg-white/5 border-b border-white/5">
+                        <p class="text-[10px] font-black uppercase text-slate-400 tracking-widest italic uppercase">รายการตรวจสอบพิกัดรายชิ้น</p>
                     </div>
+                    <div id="itemList" class="max-h-[250px] overflow-y-auto divide-y divide-white/5 custom-scrollbar"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        const apiKey = "AIzaSyBwkOYDZSoZbX1NrD6pkGH2c2CC_Ffsze8"; 
+    <!-- Error Modal -->
+    <div id="errorModal" class="hidden fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="glass max-w-sm w-full p-8 rounded-[2.5rem] border-red-500/30 text-center">
+            <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20 text-red-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h3 class="text-lg font-black text-white mb-2 italic uppercase">Analysis Failed</h3>
+            <p id="errorTxt" class="text-sm text-slate-400 italic mb-6 leading-relaxed">System encountered a temporary issue.</p>
+            <button onclick="closeError()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-2xl transition-all active:scale-95 uppercase text-[10px] tracking-widest">Dismiss</button>
+        </div>
+    </div>
 
-        async function handleFile(e) {
+    <script>
+        const apiKey = "AIzaSyBwkOYDZSoZbX1NrD6pkGH2c2CC_Ffsze8";
+
+        function closeError() { document.getElementById('errorModal').classList.add('hidden'); }
+        function showError(msg) { 
+            document.getElementById('errorTxt').innerText = msg;
+            document.getElementById('errorModal').classList.remove('hidden');
+        }
+
+        function handleFile(e) {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -100,35 +137,52 @@
                 document.getElementById('previewImg').classList.remove('hidden');
                 document.getElementById('placeholder').classList.add('hidden');
                 document.getElementById('loader').classList.remove('hidden');
-                await startAnalysis(ev.target.result);
+                document.getElementById('dashboard').classList.add('hidden');
+                await analyzeCoins(ev.target.result);
             };
             reader.readAsDataURL(file);
         }
 
-        async function startAnalysis(base64) {
-            // Stronger instructions to prevent calculation hallucination
-            const prompt = `วิเคราะห์ภาพเหรียญไทยแบบระบุรายชิ้น (Individual Coin Mapping)
+        const fetchWithRetry = async (url, options, retries = 5, backoff = 1000) => {
+            try {
+                const res = await fetch(url, options);
+                if (!res.ok) {
+                    if (retries > 0 && (res.status >= 500 || res.status === 429)) {
+                        await new Promise(r => setTimeout(r, backoff));
+                        return fetchWithRetry(url, options, retries - 1, backoff * 2);
+                    }
+                    throw new Error(`Status: ${res.status}`);
+                }
+                return res;
+            } catch (err) {
+                if (retries > 0) {
+                    await new Promise(r => setTimeout(r, backoff));
+                    return fetchWithRetry(url, options, retries - 1, backoff * 2);
+                }
+                throw err;
+            }
+        };
+
+        async function analyzeCoins(base64) {
+            const loadingMsg = document.getElementById('loadingMsg');
+            loadingMsg.innerText = "Analyzing Spatial Properties...";
+
+            const prompt = `Identify Thai coins in this image. 
+            Mandatory: Identify EACH coin individually.
+            Logic for 1 vs 5 THB: 5 THB is noticeably larger and thicker. If you see two silver coins, the smaller one is 1 THB.
+            Return ONLY JSON.
             
-            ข้อบังคับสำคัญ:
-            1. ห้ามคำนวณยอดเงินรวมเองเด็ดขาด
-            2. ให้สแกนหาเหรียญทีละชิ้น และระบุพิกัดโดยประมาณ (เช่น "บนซ้าย", "กลางขวา")
-            3. ตรวจสอบ "ขนาดหน้าเหรียญ" และ "ความหนาของขอบ" เพื่อแยกเหรียญ 1 และ 5 บาท
-               - เหรียญ 5: ใหญ่และหนากว่าเหรียญ 1 เสมอ หากมีเหรียญ 1 บาทวางข้างๆ ต้องเห็นความต่างชัดเจน
-            4. เหรียญ 10: ต้องมี 2 สี
-            5. เหรียญ 2: สีทองล้วน
-            
-            ส่งค่ากลับมาเป็น JSON รายการเหรียญ:
+            JSON Structure:
             {
-              "coins": [
-                {"id": 1, "value": 10, "location": "บนซ้าย", "features": "เห็นแกนทอง"},
-                {"id": 2, "value": 5, "location": "กลาง", "features": "สีเงิน ขนาดใหญ่กว่าเหรียญข้างๆ"},
-                {"id": 3, "value": 1, "location": "ล่าง", "features": "สีเงิน ขนาดเล็กสุด"}
-              ],
-              "ai_observation": "สรุปสภาพแสงหรือการวางซ้อนของเหรียญ"
+              "detected_coins": [
+                {"id": 1, "denom": 10, "loc": "Top-Left", "note": "Bimetallic check passed"}
+              ]
             }`;
 
             try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                if (!apiKey) throw new Error("API Key Missing");
+
+                const res = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -139,55 +193,73 @@
 
                 const json = await res.json();
                 const data = JSON.parse(json.candidates[0].content.parts[0].text);
-                processFinalResults(data);
+                renderEverything(data);
             } catch (err) {
-                console.error(err);
-                alert("การวิเคราะห์ขัดข้อง กรุณาลองใหม่อีกครั้ง");
+                showError("ขออภัย ระบบหนาแน่นชั่วคราว กรุณาลองใหม่ในอีกสักครู่ (" + err.message + ")");
             } finally {
                 document.getElementById('loader').classList.add('hidden');
             }
         }
 
-        function processFinalResults(data) {
-            const list = document.getElementById('itemList');
-            const coins = data.coins || [];
-            list.innerHTML = '';
+        function renderEverything(data) {
+            const coins = data.detected_coins || [];
+            const itemList = document.getElementById('itemList');
+            const statRows = document.getElementById('statRows');
             
-            let totalMoney = 0;
-            let count = coins.length;
+            itemList.innerHTML = '';
+            statRows.innerHTML = '';
 
-            // Sort by ID to keep consistent
-            coins.sort((a,b) => a.id - b.id);
+            // 1. Initial Math
+            let totalMoney = 0;
+            const stats = {
+                10: { count: 0, color: 'text-orange-400' },
+                5: { count: 0, color: 'text-slate-300' },
+                2: { count: 0, color: 'text-yellow-400' },
+                1: { count: 0, color: 'text-slate-400' }
+            };
 
             coins.forEach(coin => {
-                // FIXED CALCULATION BY CODE
-                totalMoney += Number(coin.value);
+                const val = Number(coin.denom);
+                totalMoney += val;
+                if (stats[val]) stats[val].count++;
 
+                // Render Item Row
                 const div = document.createElement('div');
-                div.className = "item-row p-4 flex justify-between items-center transition-all";
+                div.className = "p-4 flex justify-between items-center hover:bg-white/[0.02] transition-colors";
                 div.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-blue-600/20 text-blue-500 border border-blue-500/30 flex items-center justify-center text-[10px] font-black">
-                            ${coin.id}
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-xl bg-blue-600/10 text-blue-500 border border-blue-500/20 flex items-center justify-center text-[10px] font-black italic">
+                            #${coin.id}
                         </div>
                         <div>
-                            <p class="text-xs font-bold text-white uppercase italic">เหรียญ ${coin.value} บาท</p>
-                            <p class="text-[9px] text-slate-500 uppercase font-mono tracking-tighter">${coin.location} • ${coin.features}</p>
+                            <p class="text-xs font-black text-white italic">เหรียญ ${val} บาท</p>
+                            <p class="text-[9px] text-slate-500 font-mono tracking-tighter uppercase">${coin.loc} • ${coin.note}</p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <p class="text-sm font-black text-white italic">${Number(coin.value).toFixed(2)}</p>
-                    </div>
                 `;
-                list.appendChild(div);
+                itemList.appendChild(div);
             });
 
+            // 2. Render Statistical Table
+            const denoms = [10, 5, 2, 1];
+            denoms.forEach(d => {
+                const s = stats[d];
+                if (s.count > 0) {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-white/[0.02] transition-colors";
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 font-bold ${s.color} italic">เหรียญ ${d} บาท</td>
+                        <td class="px-6 py-4 text-center font-black text-white">${s.count}</td>
+                        <td class="px-6 py-4 text-right font-black text-white italic">${(s.count * d).toFixed(2)}</td>
+                    `;
+                    statRows.appendChild(tr);
+                }
+            });
+
+            // 3. Update Totals
             document.getElementById('totalValue').innerText = totalMoney.toLocaleString(undefined, {minimumFractionDigits: 2});
-            document.getElementById('totalCount').innerText = count;
-            document.getElementById('summaryTxt').innerText = data.ai_observation;
-            
+            document.getElementById('totalCount').innerText = coins.length;
             document.getElementById('dashboard').classList.remove('hidden');
-            document.getElementById('summaryCard').classList.remove('hidden');
         }
     </script>
 </body>
